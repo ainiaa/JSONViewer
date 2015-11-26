@@ -1,4 +1,4 @@
-package com.kissdry.ui;
+package com.kissdry.jsonviewer.ui;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 

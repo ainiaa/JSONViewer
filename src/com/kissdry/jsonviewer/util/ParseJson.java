@@ -1,4 +1,4 @@
-package com.kissdry.util;
+package com.kissdry.jsonviewer.util;
 
 import com.alibaba.fastjson.*;
 import java.util.Set;

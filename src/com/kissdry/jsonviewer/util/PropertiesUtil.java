@@ -1,15 +1,6 @@
-package com.kissdry.util;
+package com.kissdry.jsonviewer.util;
 
-import com.kissdry.ui.MessageUtil;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
@@ -120,7 +111,7 @@ public class PropertiesUtil {
 
         } catch (IOException e) {
             System.err.println("Visit " + filePath + " for updating value error:" + e.getMessage());
-            MessageUtil.showMessageDialogMessage("Visit " + filePath + " for updating value error:" + e.getMessage());
+            //MessageUtil.showMessageDialogMessage("Visit " + filePath + " for updating value error:" + e.getMessage());
         }
 
         return true;
@@ -147,7 +138,7 @@ public class PropertiesUtil {
         try {
             prop.load(fis);
         } catch (Exception ex) {
-            MessageUtil.showMessageDialogMessage("load " + propFile + " error:" + ex.getMessage());
+           // MessageUtil.showMessageDialogMessage("load " + propFile + " error:" + ex.getMessage());
         }
         return prop;
     }

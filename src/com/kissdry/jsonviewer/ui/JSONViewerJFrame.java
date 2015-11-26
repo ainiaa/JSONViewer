@@ -1,7 +1,7 @@
-package com.kissdry.ui;
+package com.kissdry.jsonviewer.ui;
 
-import com.kissdry.util.ParseJson;
-import com.kissdry.util.PropertiesUtil;
+import com.kissdry.jsonviewer.util.PropertiesUtil;
+import com.kissdry.jsonviewer.util.ParseJson;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;

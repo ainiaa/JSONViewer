@@ -1,8 +1,8 @@
-package com.kissdry.ui;
+package com.kissdry.jsonviewer.ui;
 
+import com.kissdry.jsonviewer.util.PropertiesUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.kissdry.util.PropertiesUtil;
 import java.awt.Component;
 import java.net.URL;
 import javax.swing.ImageIcon;
