@@ -5,6 +5,8 @@
  */
 package com.kissdry.jsonviewer.ui;
 
+import java.awt.Toolkit;
+
 /**
  *
  * @author Administrator
@@ -16,6 +18,8 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
      */
     public JSONViewerAboutBoxJFrame() {
         initComponents();
+        setIconImage(Toolkit.getDefaultToolkit().getImage(
+                getClass().getClassLoader().getResource("resources/images/json3.png")));//这个不能以 '/'开头]
     }
 
     /**
@@ -36,41 +40,50 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
         contactValue = new javax.swing.JLabel();
         websiteLabel = new javax.swing.JLabel();
         websiteValue = new javax.swing.JLabel();
-        closeButton = new javax.swing.JButton();
         descValue = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         versionLabel.setFont(new java.awt.Font("宋体", 1, 14)); // NOI18N
+        versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         versionLabel.setText(JSONViewerUIUtil.getI18nById("versionLabel"));
+        versionLabel.setFocusable(false);
+        versionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
+        versionValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         versionValue.setText(JSONViewerUIUtil.getI18nById("versionValue"));
+        versionValue.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         titleValue.setFont(new java.awt.Font("宋体", 1, 18)); // NOI18N
         titleValue.setText(JSONViewerUIUtil.getI18nById("titleValue"));
 
         authorLabel.setFont(new java.awt.Font("宋体", 1, 14)); // NOI18N
+        authorLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         authorLabel.setText(JSONViewerUIUtil.getI18nById("authorLabel"));
+        authorLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         contactLabel.setFont(new java.awt.Font("宋体", 1, 14)); // NOI18N
+        contactLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         contactLabel.setText(JSONViewerUIUtil.getI18nById("contactLabel"));
+        contactLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
+        authorValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         authorValue.setText(JSONViewerUIUtil.getI18nById("authorValue"));
+        authorValue.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
+        contactValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         contactValue.setText(JSONViewerUIUtil.getI18nById("contactValue"));
+        contactValue.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         websiteLabel.setFont(new java.awt.Font("宋体", 1, 14)); // NOI18N
+        websiteLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         websiteLabel.setText(JSONViewerUIUtil.getI18nById("websiteLabel"));
+        websiteLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
+        websiteValue.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         websiteValue.setText(JSONViewerUIUtil.getI18nById("websiteValue"));
-
-        closeButton.setText(JSONViewerUIUtil.getI18nById("closeButton"));
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
+        websiteValue.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         descValue.setFont(new java.awt.Font("宋体", 2, 14)); // NOI18N
         descValue.setText(JSONViewerUIUtil.getI18nById("descValue"));
@@ -80,32 +93,27 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(58, 58, 58)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(contactLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(contactValue, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(authorLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(authorValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(versionLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(versionValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(titleValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(websiteLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(websiteValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(descValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(contactLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(contactValue, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(122, 122, 122)
-                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(authorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(authorValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(versionValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(titleValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(websiteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(websiteValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(descValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,18 +138,11 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(websiteLabel)
                     .addComponent(websiteValue))
-                .addGap(27, 27, 27)
-                .addComponent(closeButton)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        this.dispose();
-        ControllerJFrame.showMainJFrame();
-    }//GEN-LAST:event_closeButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -181,7 +182,6 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel authorLabel;
     private javax.swing.JLabel authorValue;
-    private javax.swing.JButton closeButton;
     private javax.swing.JLabel contactLabel;
     private javax.swing.JLabel contactValue;
     private javax.swing.JLabel descValue;

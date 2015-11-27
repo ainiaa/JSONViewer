@@ -21,6 +21,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         initUI();
         initComponents();
         initTreeAndIcon();
+        jTextPane1.paste();
     }
 
     public static void initUI() {
@@ -57,12 +58,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         escapeString = new javax.swing.JButton();
         unescapeString = new javax.swing.JButton();
         cleanNewLine = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
+        pasteAndPretty = new javax.swing.JButton();
+        pasteAndPress = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         containerjTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -154,47 +151,38 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         });
         topjToolBar.add(cleanNewLine);
 
-        jButton7.setText("jButton7");
-        jButton7.setFocusable(false);
-        jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topjToolBar.add(jButton7);
+        pasteAndPretty.setText(JSONViewerUIUtil.getI18nById("pasteAndPretty"));
+        pasteAndPretty.setFocusable(false);
+        pasteAndPretty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pasteAndPretty.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        pasteAndPretty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteAndPrettyActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(pasteAndPretty);
 
-        jButton8.setText("jButton8");
-        jButton8.setFocusable(false);
-        jButton8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton8.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topjToolBar.add(jButton8);
-
-        jButton9.setText("jButton9");
-        jButton9.setFocusable(false);
-        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton9.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topjToolBar.add(jButton9);
-
-        jButton10.setText("jButton10");
-        jButton10.setFocusable(false);
-        jButton10.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton10.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topjToolBar.add(jButton10);
-
-        jButton11.setText("jButton11");
-        jButton11.setFocusable(false);
-        jButton11.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton11.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topjToolBar.add(jButton11);
-
-        jButton12.setText("jButton12");
-        jButton12.setFocusable(false);
-        jButton12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton12.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        topjToolBar.add(jButton12);
+        pasteAndPress.setText(JSONViewerUIUtil.getI18nById("pasteAndPress"));
+        pasteAndPress.setFocusable(false);
+        pasteAndPress.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pasteAndPress.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        pasteAndPress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasteAndPressActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(pasteAndPress);
 
         jSplitPane1.setDividerLocation(630);
         jSplitPane1.setDividerSize(8);
 
         containerjTabbedPane.setAutoscrolls(true);
 
+        jTextPane1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextPane1FocusGained(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextPane1);
 
         containerjTabbedPane.addTab("JSON Viewer", jScrollPane1);
@@ -215,7 +203,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         saveFile.setText(JSONViewerUIUtil.getI18nById("saveFile"));
         fileMenu.add(saveFile);
 
-        close.setText(JSONViewerUIUtil.getI18nById("cose"));
+        close.setText(JSONViewerUIUtil.getI18nById("close"));
         fileMenu.add(close);
 
         jMenuBar.add(fileMenu);
@@ -342,6 +330,23 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         ControllerJFrame.showAboutBoxFrame();
     }//GEN-LAST:event_aboutMeActionPerformed
 
+    private void jTextPane1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPane1FocusGained
+        String textContent = jTextPane1.getText();
+        if (textContent.isEmpty() || textContent.trim().isEmpty()) {
+            jTextPane1.paste();
+        }
+    }//GEN-LAST:event_jTextPane1FocusGained
+
+    private void pasteAndPrettyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteAndPrettyActionPerformed
+        jTextPane1.paste();
+        parseJson(true);
+    }//GEN-LAST:event_pasteAndPrettyActionPerformed
+
+    private void pasteAndPressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteAndPressActionPerformed
+        jTextPane1.paste();
+        parseJson(false);
+    }//GEN-LAST:event_pasteAndPressActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -370,12 +375,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formatAndPettry;
     private javax.swing.JMenuItem formatContent;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -385,6 +384,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem openFile;
     private javax.swing.JButton parseAndPress;
     private javax.swing.JButton parseAndPretty;
+    private javax.swing.JButton pasteAndPress;
+    private javax.swing.JButton pasteAndPretty;
     private javax.swing.JMenuItem saveFile;
     private javax.swing.JMenu toolMenu;
     private javax.swing.JToolBar topjToolBar;
