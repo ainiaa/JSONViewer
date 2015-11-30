@@ -3,6 +3,7 @@ package com.kissdry.jsonviewer.ui;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import static com.kissdry.jsonviewer.ui.JSONViewerUIUtil.getResourceByPath;
 import com.kissdry.jsonviewer.util.PropertiesUtil;
 import com.kissdry.jsonviewer.util.ParseJson;
 import java.awt.Color;
@@ -69,6 +70,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         initComponents();
         initTreeAndIcon();
         initTabbedContainer();
+        containerjTabbedPane.add(tabbedContainer);
         jTextPane1.paste();
     }
 
@@ -108,6 +110,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         cleanNewLine = new javax.swing.JButton();
         pasteAndPretty = new javax.swing.JButton();
         pasteAndPress = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         containerjTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -223,6 +227,28 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         });
         topjToolBar.add(pasteAndPress);
 
+        jButton1.setText("新标签");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(jButton1);
+
+        jButton2.setText("jButton2");
+        jButton2.setFocusable(false);
+        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(jButton2);
+
         jSplitPane1.setDividerLocation(630);
         jSplitPane1.setDividerSize(8);
 
@@ -324,6 +350,18 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         parseJson(true);
     }//GEN-LAST:event_parseAndPrettyActionPerformed
 
+    private void addTabNew() {
+        RSyntaxTextArea rTextArea = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
+        rTextArea.setColumns(20);
+        rTextArea.setRows(5);
+        rTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        javax.swing.JScrollPane jScrollPanex = new javax.swing.JScrollPane();
+        jScrollPanex.setViewportView(rTextArea);
+
+        containerjTabbedPane.addTab("JSON source", jScrollPanex);
+    }
+            
+    
     private void initTabbedContainer() {
         TabData tabData = newTabData("Welcome!", "This is a Tab!", null);
         tabDataModel = new DefaultTabDataModel(new TabData[]{tabData});
@@ -543,25 +581,25 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 String tmp = node.toString();
                 if (tmp.startsWith(Kit.ARRAY_PREFIX)) {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/a.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/a.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.STRING_PREFIX)) {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/v.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/v.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.OBJECT_PREFIX)) {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/o.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/o.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.NUMBER_PREFIX)) {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/n.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/n.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.NULL_PREFIX)) {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/k.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/k.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.BOOL_PREFIX)) {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/v.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/v.gif")));
                     this.setText(tmp.substring(2));
                 } else {
-                    this.setIcon(new ImageIcon(getClass().getResource("resources/v.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/v.gif")));
                     this.setText(tmp.substring(2));
                 }
                 return this;
@@ -736,6 +774,14 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         jTextPane1.paste();
         parseJson(false);
     }//GEN-LAST:event_pasteAndPressActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        addTab("NewTab", true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        addTabNew();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     /**
@@ -1090,6 +1136,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formatAndPettry;
     private javax.swing.JMenuItem formatContent;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
