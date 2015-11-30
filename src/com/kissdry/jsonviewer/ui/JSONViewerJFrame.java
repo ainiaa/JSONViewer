@@ -72,6 +72,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         initTabbedContainer();
         containerjTabbedPane.add(tabbedContainer);
         jTextPane1.paste();
+        JClosableTabbedPane c = new JClosableTabbedPane();//todo 需要处理
     }
 
     public static void initUI() {
@@ -357,7 +358,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         rTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
         javax.swing.JScrollPane jScrollPanex = new javax.swing.JScrollPane();
         jScrollPanex.setViewportView(rTextArea);
-
         containerjTabbedPane.addTab("JSON source", jScrollPanex);
     }
             
