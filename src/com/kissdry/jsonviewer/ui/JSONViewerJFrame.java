@@ -1,12 +1,59 @@
 package com.kissdry.jsonviewer.ui;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.kissdry.jsonviewer.util.PropertiesUtil;
 import com.kissdry.jsonviewer.util.ParseJson;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.JViewport;
 import javax.swing.UIManager;
+import javax.swing.event.ListDataEvent;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
+import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rtextarea.RTextScrollPane;
+import org.netbeans.swing.tabcontrol.DefaultTabDataModel;
+import org.netbeans.swing.tabcontrol.TabData;
+import org.netbeans.swing.tabcontrol.TabDataModel;
+import org.netbeans.swing.tabcontrol.TabbedContainer;
+import org.netbeans.swing.tabcontrol.event.ComplexListDataEvent;
+import org.netbeans.swing.tabcontrol.event.ComplexListDataListener;
 
 /**
  *
@@ -21,6 +68,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         initUI();
         initComponents();
         initTreeAndIcon();
+        initTabbedContainer();
         jTextPane1.paste();
     }
 
@@ -64,6 +112,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         containerjTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        rSyntaxTextArea1 = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
         jsonTreejScrollPane = new javax.swing.JScrollPane();
         jsonTree = new javax.swing.JTree();
         jMenuBar = new javax.swing.JMenuBar();
@@ -187,6 +237,13 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
 
         containerjTabbedPane.addTab("JSON Viewer", jScrollPane1);
 
+        rSyntaxTextArea1.setColumns(20);
+        rSyntaxTextArea1.setRows(5);
+        rSyntaxTextArea1.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        jScrollPane2.setViewportView(rSyntaxTextArea1);
+
+        containerjTabbedPane.addTab("JSON source", jScrollPane2);
+
         jSplitPane1.setLeftComponent(containerjTabbedPane);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
@@ -267,6 +324,339 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         parseJson(true);
     }//GEN-LAST:event_parseAndPrettyActionPerformed
 
+    private void initTabbedContainer() {
+        TabData tabData = newTabData("Welcome!", "This is a Tab!", null);
+        tabDataModel = new DefaultTabDataModel(new TabData[]{tabData});
+        tabbedContainer = new TabbedContainer(tabDataModel, TabbedContainer.TYPE_EDITOR);
+        tabbedContainer.getSelectionModel().setSelectedIndex(0);
+        tabbedContainer.setShowCloseButton(true);
+        tabDataModel.addComplexListDataListener(new ComplexListDataListener() {
+            @Override
+            public void indicesAdded(ComplexListDataEvent clde) {
+            }
+
+            @Override
+            public void indicesRemoved(ComplexListDataEvent clde) {
+            }
+
+            @Override
+            public void indicesChanged(ComplexListDataEvent clde) {
+            }
+
+            @Override
+            public void intervalAdded(ListDataEvent e) {
+            }
+
+            @Override
+            public void intervalRemoved(ListDataEvent e) {
+                ComplexListDataEvent ce = (ComplexListDataEvent) e;
+                TabData[] tbArr = ce.getAffectedItems();
+                if (tbArr != null && tbArr.length > 0) {
+                    tbArr[0].getText();
+                    JTree tree = getTree(tbArr[0]);
+                    if (tree != null) {
+                        jsonEleTreeMap.remove(tree.hashCode());
+                        System.out.println("Remove HashCode: " + tree.hashCode() + ". Close Tab: " + tbArr[0].getText() + " !");
+                    }
+                }
+            }
+
+            @Override
+            public void contentsChanged(ListDataEvent e) {
+            }
+        });
+
+        tabbedContainer.addActionListener((ActionEvent e) -> {
+            if ("select".equalsIgnoreCase(e.getActionCommand())) {
+                treePathLst.clear();
+            }
+        });
+
+    }
+
+    private int getPreferredWidthForColumn(JTable table, TableColumn col) {
+        int hw = columnHeaderWidth(table, col);  // hw = header width
+        int cw = widestCellInColumn(table, col);  // cw = column width
+        return hw > cw ? hw : cw;
+
+    }
+
+    private int columnHeaderWidth(JTable table, TableColumn col) {
+        TableCellRenderer renderer = table.getTableHeader().getDefaultRenderer();
+        Component comp = renderer.getTableCellRendererComponent(table, col.getHeaderValue(), false, false, 0, 0);
+        return comp.getPreferredSize().width;
+    }
+
+    private int widestCellInColumn(JTable table, TableColumn col) {
+        int c = col.getModelIndex();
+        int width, maxw = 0;
+        for (int r = 0; r < table.getRowCount(); r++) {
+            TableCellRenderer renderer = table.getCellRenderer(r, c);
+            Component comp = renderer.getTableCellRendererComponent(table, table.getValueAt(r, c), false, false, r, c);
+            width = comp.getPreferredSize().width;
+            maxw = width > maxw ? width : maxw;
+        }
+        if (maxw < 90) {
+            maxw = 90;
+        }
+        return maxw + 10;
+    }
+    
+    private void treeSelection(JTree tree, JTable table) {
+        DefaultMutableTreeNode selNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        if (selNode == null) {
+            //System.out.println("jTree1ValueChanged:selNode is null");
+            return;
+        }
+        String col[] = {"key", "value"};
+        DefaultTableModel tm = (DefaultTableModel) table.getModel();
+        tm.setColumnCount(2);
+        tm.setColumnIdentifiers(col);
+        if (selNode.isLeaf()) {
+            tm.setRowCount(1);
+            String arr[] = Kit.pstr(selNode.toString());
+            tm.setValueAt(arr[1], 0, 0);
+            tm.setValueAt(arr[2], 0, 1);
+        } else {
+            int childCount = selNode.getChildCount();
+            tm.setRowCount(childCount);
+            for (int i = 0; i < childCount; i++) {
+                String arr[] = Kit.pstr(selNode.getChildAt(i).toString());
+                tm.setValueAt(arr[1], i, 0);
+                tm.setValueAt(arr[2], i, 1);
+            }
+        }
+        table.setModel(tm);
+        TableColumn column0 = table.getColumnModel().getColumn(0);
+        column0.setPreferredWidth(getPreferredWidthForColumn(table, column0));
+        TableColumn column1 = table.getColumnModel().getColumn(1);
+        column1.setPreferredWidth(getPreferredWidthForColumn(table, column1));
+        table.updateUI();
+    }
+
+    private int addTab(String tabName, boolean isSel) {
+        TabData tabData = newTabData(tabName, tabName, null);
+        int newIndex = tabbedContainer.getTabCount();
+        tabDataModel.addTab(newIndex, tabData);
+        if (isSel) {
+            tabbedContainer.getSelectionModel().setSelectedIndex(newIndex);
+        }
+        return newIndex;
+    }
+    
+    private JTree getTree(TabData tabData) {
+        if (tabData == null) {
+            return null;
+        }
+        JSplitPane selSplitPane = (JSplitPane) tabData.getComponent();
+        JSplitPane rightSplitPane = (JSplitPane) selSplitPane.getRightComponent();
+        JScrollPane sp = (JScrollPane) rightSplitPane.getLeftComponent();
+        JViewport vp = (JViewport) sp.getComponent(0);
+        JTree t = (JTree) vp.getComponent(0);
+        return t;
+    }
+
+    private JTree getTree(int tabIndex) {
+        if (tabIndex >= 0) {
+            TabData selTabData = tabDataModel.getTab(tabIndex);
+            return getTree(selTabData);
+        }
+        return null;
+    }
+
+    private JTree getTree() {
+        return getTree(getTabIndex());
+    }
+
+    private TabData newTabData(String tabName, String tabTip, Icon icon) {
+        final JSplitPane splitPane = new JSplitPane();
+        splitPane.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                splitPane.setDividerLocation(0.45);
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+            }
+        });
+
+        RSyntaxTextArea textArea = newTextArea();
+
+//        textArea.set
+        RTextScrollPane sp = new RTextScrollPane(textArea);
+        sp.setFoldIndicatorEnabled(true);
+        splitPane.setLeftComponent(sp);
+        //splitPane.setLeftComponent(new JScrollPane(textArea));
+
+        final JSplitPane rightSplitPane = new JSplitPane();
+        rightSplitPane.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int w = rightSplitPane.getWidth();
+                if (w > 500) {
+                    rightSplitPane.setDividerLocation((w - 220) / (w * 1.0f));
+                } else {
+                    rightSplitPane.setDividerLocation(0.8);
+                }
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+            }
+        });
+
+        JTree tree = newTree();
+
+        rightSplitPane.setLeftComponent(new JScrollPane(tree));
+        JTable table = newTable();
+        rightSplitPane.setRightComponent(new JScrollPane(table));
+
+        splitPane.setRightComponent(rightSplitPane);
+
+        TabData tabData = new TabData(splitPane, icon, tabName, tabTip);
+
+        return tabData;
+    }
+
+    private void setNodeIcon(JTree tree) {
+        tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                String tmp = node.toString();
+                if (tmp.startsWith(Kit.ARRAY_PREFIX)) {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/a.gif")));
+                    this.setText(tmp.substring(2));
+                } else if (tmp.startsWith(Kit.STRING_PREFIX)) {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/v.gif")));
+                    this.setText(tmp.substring(2));
+                } else if (tmp.startsWith(Kit.OBJECT_PREFIX)) {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/o.gif")));
+                    this.setText(tmp.substring(2));
+                } else if (tmp.startsWith(Kit.NUMBER_PREFIX)) {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/n.gif")));
+                    this.setText(tmp.substring(2));
+                } else if (tmp.startsWith(Kit.NULL_PREFIX)) {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/k.gif")));
+                    this.setText(tmp.substring(2));
+                } else if (tmp.startsWith(Kit.BOOL_PREFIX)) {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/v.gif")));
+                    this.setText(tmp.substring(2));
+                } else {
+                    this.setIcon(new ImageIcon(getClass().getResource("resources/v.gif")));
+                    this.setText(tmp.substring(2));
+                }
+                return this;
+            }
+        });
+    }
+    
+    private JTree newTree() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("o-JSON");
+        DefaultTreeModel model = new DefaultTreeModel(root);
+        JTree tree = new JTree(model);
+        tree.addTreeSelectionListener((javax.swing.event.TreeSelectionEvent evt) -> {
+            treeSelection(getTree(), getTable());
+        });
+        setNodeIcon(tree);
+        tree.addMouseListener(new TreeMouseListener(tree));
+        System.out.println("New HashCode : " + tree.hashCode());
+        return tree;
+    }
+    
+    private String getTabTitle() {
+        return tabDataModel.getTab(getTabIndex()).getText();
+    }
+    
+    private JTable newTable() {
+        String col[] = {"key", "value"};
+        DefaultTableModel tm = new DefaultTableModel();
+        tm.setColumnCount(2);
+        tm.setColumnIdentifiers(col);
+        JTable table = new JTable(tm);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setAutoscrolls(true);
+        table.setMinimumSize(new Dimension(160, 100));
+        return table;
+    }
+
+    private RSyntaxTextArea newTextArea() {
+//        JTextArea textArea = new JTextArea();
+//        textArea.setAutoscrolls(true);
+////      textArea.getDocument().addUndoableEditListener(undoMg);
+//        textArea.addMouseListener(new TextAreaMouseListener());
+        RSyntaxTextArea textArea = new RSyntaxTextArea();
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        textArea.setCodeFoldingEnabled(true);
+        textArea.setAntiAliasingEnabled(true);
+        textArea.setAutoscrolls(true);
+
+        SyntaxScheme scheme = textArea.getSyntaxScheme();
+//        scheme.getStyle(Token.COMMENT_KEYWORD).foreground = Color.red;
+//      scheme.getStyle(Token.DATA_TYPE).foreground = Color.blue;
+        scheme.getStyle(Token.LITERAL_STRING_DOUBLE_QUOTE).foreground = Color.BLUE;
+        scheme.getStyle(Token.LITERAL_NUMBER_DECIMAL_INT).foreground = new Color(164, 0, 0);
+        scheme.getStyle(Token.LITERAL_NUMBER_FLOAT).foreground = new Color(164, 0, 0);
+        scheme.getStyle(Token.LITERAL_BOOLEAN).foreground = Color.RED;
+        scheme.getStyle(Token.OPERATOR).foreground = Color.BLACK;
+        textArea.revalidate();
+        textArea.addMouseListener(new TextAreaMouseListener());
+
+        return textArea;
+    }
+
+    private JTable getTable() {
+        return getTable(getTabIndex());
+    }
+    
+    private JTable getTable(int tabIndex) {
+        if (tabIndex >= 0) {
+            TabData selTabData = tabDataModel.getTab(tabIndex);
+            JSplitPane selSplitPane = (JSplitPane) selTabData.getComponent();
+            JSplitPane rightSplitPane = (JSplitPane) selSplitPane.getRightComponent();
+            JScrollPane sp = (JScrollPane) rightSplitPane.getRightComponent();
+            JViewport vp = (JViewport) sp.getComponent(0);
+            JTable t = (JTable) vp.getComponent(0);
+            return t;
+        }
+        return null;
+    }
+
+    private int getTabIndex() {
+        return tabbedContainer.getSelectionModel().getSelectedIndex();
+    }
+
+    public JTextArea getTextArea() {
+        int selIndex = getTabIndex();
+        if (selIndex >= 0) {
+            TabData selTabData = tabDataModel.getTab(selIndex);
+            JSplitPane selSplitPane = (JSplitPane) selTabData.getComponent();
+            JScrollPane sp = (JScrollPane) selSplitPane.getLeftComponent();
+            JViewport vp = (JViewport) sp.getComponent(0);
+            JTextArea ta = (JTextArea) vp.getComponent(0);
+            return ta;
+        }
+        return null;
+    }
+
     /**
      * 解析json 并尝试生成Jtree
      *
@@ -275,7 +665,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
      */
     private void parseJson(boolean prettyFormat) {
         String jsonStr = jTextPane1.getText();
-        if (jsonStr.isEmpty()) { 
+        if (jsonStr.isEmpty()) {
             MessageUtil.showInfoMessageDialog(JSONViewerUIUtil.getI18nById("emptyJSON"));
         } else {
             DefaultMutableTreeNode root = Kit.objNode("JSON");
@@ -347,6 +737,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         parseJson(false);
     }//GEN-LAST:event_pasteAndPressActionPerformed
 
+
     /**
      * @param args the command line arguments
      */
@@ -359,7 +750,331 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
 //            jframe.setVisible(true);
 //        });
 //    }
+    
+    private class TreeMouseListener implements MouseListener {
 
+        private final JTree tree;
+
+        public TreeMouseListener(JTree tree) {
+            this.tree = tree;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+            if (path == null) {
+                return;
+            }
+            tree.setSelectionPath(path);
+            DefaultMutableTreeNode selNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (e.isPopupTrigger()) {
+                JPopupMenu popMenu = new JPopupMenu();
+                JMenuItem copyValue = new JMenuItem("复制 键值");
+                JMenuItem copyKey = new JMenuItem("复制 键名");
+                JMenuItem copyPath = new JMenuItem("复制 路径");
+                JMenuItem copyKeyValue = new JMenuItem("复制 键名键值");
+                JMenuItem copyNode = new JMenuItem("复制 节点内容");
+                JMenuItem copyPathAllVal = new JMenuItem("复制 同路径键值");
+                JMenuItem copySingleNodeString = new JMenuItem("复制 MAP式内容");
+                JMenuItem copyNodeFormat = new JMenuItem("复制 节点内容带格式");
+
+                popMenu.add(copyKey);
+                popMenu.add(copyValue);
+                popMenu.add(copyPath);
+                popMenu.add(copyNode);
+                popMenu.add(copyKeyValue);
+                popMenu.add(copySingleNodeString);
+                popMenu.add(copyPathAllVal);
+                popMenu.add(copyNodeFormat);
+                copyKey.addActionListener(new TreeNodeMenuItemActionListener(tree, 1, selNode));
+                copyValue.addActionListener(new TreeNodeMenuItemActionListener(tree, 2, selNode));
+                copyKeyValue.addActionListener(new TreeNodeMenuItemActionListener(tree, 3, selNode));
+                copyPath.addActionListener(new TreeNodeMenuItemActionListener(tree, 4, path));
+                copyPathAllVal.addActionListener(new TreeNodeMenuItemActionListener(tree, 5, selNode));
+                copyNode.addActionListener(new TreeNodeMenuItemActionListener(tree, 6, path));
+                copyNodeFormat.addActionListener(new TreeNodeMenuItemActionListener(tree, 7, path));
+                copySingleNodeString.addActionListener(new TreeNodeMenuItemActionListener(tree, 8, selNode));
+                popMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+    }
+    
+    private class TreeNodeMenuItemActionListener implements ActionListener {
+
+        private final int optType;
+        private final Object obj;
+        private final JTree tree;
+
+        /**
+         * optType 1:key;2:value;3:key value
+         *
+         * @param optType
+         * @param str
+         */
+        public TreeNodeMenuItemActionListener(JTree tree, int optType, Object obj) {
+            this.optType = optType;
+            this.obj = obj;
+            this.tree = tree;
+        }
+
+        /**
+         * 复制节点路径.
+         *
+         * @param treePath
+         * @return
+         */
+        public String copyTreeNodePath(TreePath treePath) {
+            String str = "";
+            String s;
+            int len = treePath.getPathCount() - 1;
+            for (int i = 0; i <= len; i++) {
+                s = treePath.getPathComponent(i).toString();
+                if (i > 0) {
+                    str += String.valueOf(dot);
+                }
+                if (i == len) {
+                    str += Kit.pstr(s)[1];
+                } else {
+                    str += s.substring(2);
+                }
+            }
+            str = StringUtils.replace(str, String.valueOf(dot) + "[", "[");
+            str = StringUtils.substring(str, 5);
+            return str;
+        }
+
+        /**
+         * 复制相似路径节点键值对.
+         *
+         * @param treeNode
+         * @return
+         */
+        public String copySimilarPathKeyValue(TreeNode treeNode) {
+            String str = "";
+            String key = Kit.pstr(treeNode.toString())[1];
+            TreeNode node = treeNode.getParent();
+            if (node == null) {
+                return "";
+            }
+            node = node.getParent();
+            if (node == null) {
+                return "";
+            }
+            int count = node.getChildCount();
+            int size;
+            for (int i = 0; i < count; i++) {
+                TreeNode child = node.getChildAt(i);
+                if (child == null) {
+                    continue;
+                }
+                size = child.getChildCount();
+                for (int i2 = 0; i2 < size; i2++) {
+                    TreeNode tmp = child.getChildAt(i2);
+                    if (tmp == null) {
+                        continue;
+                    }
+                    String arr[] = Kit.pstr(tmp.toString());
+                    if (key != null && key.equals(arr[1])) {
+                        str += arr[2] + "\n";
+                    }
+                }
+            }
+            return str;
+        }
+
+        /**
+         * 复制节点内容.
+         *
+         * @param path 节点路径
+         * @param isFormat 是否带格式
+         * @return
+         */
+        private String copyNodeContent(String path, boolean isFormat) {
+            String str = "";
+            String arr[] = StringUtils.split(path, String.valueOf(dot));
+            System.out.println("Get HashCode : " + tree.hashCode() + " . TabTitle : " + getTabTitle());
+            JsonElement jsonElement = (JsonElement) jsonEleTreeMap.get(tree.hashCode());
+            if (arr.length > 1) {
+                for (int i = 1; i < arr.length; i++) {
+                    int index = Kit.getIndex(arr[i]);
+                    String key = Kit.getKey(arr[i]);
+                    if (jsonElement.isJsonPrimitive()) {
+                        break;
+                    }
+                    if (index == -1) {
+                        jsonElement = jsonElement.getAsJsonObject().get(key);
+                    } else {
+                        jsonElement = jsonElement.getAsJsonObject().getAsJsonArray(key).get(index);
+                    }
+                }
+            }
+            if (jsonElement != null && !jsonElement.isJsonNull()) {
+                GsonBuilder gb = new GsonBuilder();
+                if (isFormat) {
+                    gb.setPrettyPrinting();
+                }
+                gb.serializeNulls();
+                Gson gson = gb.create();
+                str = gson.toJson(jsonElement);
+            }
+            return str;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (obj == null) {
+                return;
+            }
+            StringSelection stringSelection = null;
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            switch (optType) {
+                case 4:
+                    {
+                        String path = copyTreeNodePath((TreePath) obj);
+                        path = StringUtils.replace(path, String.valueOf(dot), ".");
+                        stringSelection = new StringSelection(path);
+                        clipboard.setContents(stringSelection, null);
+                        break;
+                    }
+                case 5:
+                    stringSelection = new StringSelection(copySimilarPathKeyValue((TreeNode) obj));
+                    clipboard.setContents(stringSelection, null);
+                    break;
+                case 6:
+                case 7:
+                    {
+                        String path = copyTreeNodePath((TreePath) obj);
+                        boolean isForamt = false;
+                        if (optType == 7) {
+                            isForamt = true;
+                        }       String str = copyNodeContent(path, isForamt);
+                        stringSelection = new StringSelection(str);
+                        clipboard.setContents(stringSelection, null);
+                        break;
+                    }
+                default:
+                    {
+                        String str = obj.toString();
+                        String[] arr = Kit.pstr(str);
+                        if ("<null>".equals(arr[2])) {
+                            arr[2] = "null";
+                        }       if (optType == 1 || optType == 2) {
+                            stringSelection = new StringSelection(arr[optType]);
+                        } else if (optType == 3) {
+                            stringSelection = new StringSelection(str.substring(2));
+                        } else if (optType == 8) {
+                            String temp = "\"" + arr[1] + "\",\"" + arr[2] + "\"";
+                            stringSelection = new StringSelection(temp);
+                        }       clipboard.setContents(stringSelection, null);
+                        break;
+                    }
+            }
+        }
+    }
+    
+    private class TextAreaMouseListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                JPopupMenu popMenu = new JPopupMenu();
+                JMenuItem mtCopy = new JMenuItem(JSONViewerUIUtil.getI18nById("mtCopy"));
+                JMenuItem mtPaste = new JMenuItem(JSONViewerUIUtil.getI18nById("mtPaste"));
+                JMenuItem mtSelAll = new JMenuItem(JSONViewerUIUtil.getI18nById("mtSelAll"));
+                JMenuItem mtClean = new JMenuItem(JSONViewerUIUtil.getI18nById("mtClean"));
+
+                popMenu.add(mtCopy);
+                popMenu.add(mtPaste);
+                popMenu.add(mtSelAll);
+                popMenu.add(mtClean);
+                JTextArea ta = getTextArea();
+                if (ta.getSelectedText() == null || ta.getSelectedText().length() == 0) {
+                    mtCopy.setEnabled(false);
+                }
+
+                mtCopy.addActionListener(new TextAreaMenuItemActionListener(1));
+                mtPaste.addActionListener(new TextAreaMenuItemActionListener(2));
+                mtSelAll.addActionListener(new TextAreaMenuItemActionListener(3));
+                mtClean.addActionListener(new TextAreaMenuItemActionListener(4));
+                popMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+    }
+
+    private class TextAreaMenuItemActionListener implements ActionListener {
+
+        private final int optType;
+        private String str;
+
+        /**
+         * optType 1:复制;2:粘帖;3:全选;4:清空
+         *
+         * @param optType
+         */
+        public TextAreaMenuItemActionListener(int optType) {
+            this.optType = optType;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (optType) {
+                case 1:
+                    getTextArea().copy();
+                    break;
+                case 2:
+                    getTextArea().paste();
+                    parseJson(true);
+                    break;
+                case 3:
+                    getTextArea().selectAll();
+                    break;
+                case 4:
+                    getTextArea().setText("");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    private final List<TreePath> treePathLst = new ArrayList<>();
+    private final Map jsonEleTreeMap = new HashMap();
+    private TabbedContainer tabbedContainer;
+    private TabDataModel tabDataModel;
+    private final char dot = 30;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;
     private javax.swing.JMenuItem cleanContent;
@@ -377,6 +1092,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTree jsonTree;
@@ -386,6 +1102,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JButton parseAndPretty;
     private javax.swing.JButton pasteAndPress;
     private javax.swing.JButton pasteAndPretty;
+    private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea1;
     private javax.swing.JMenuItem saveFile;
     private javax.swing.JMenu toolMenu;
     private javax.swing.JToolBar topjToolBar;
