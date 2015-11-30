@@ -28,6 +28,7 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
         addMouseListener(this);
     }
 
+    @Override
     public void addTab(String title, Component component) {
         this.addTab(title, component, null);
     }
