@@ -96,8 +96,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         containerjTabbedPane = new JClosableTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        rSyntaxTextArea1 = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
         jsonTreejScrollPane = new javax.swing.JScrollPane();
         jsonTree = new javax.swing.JTree();
         jMenuBar = new javax.swing.JMenuBar();
@@ -232,13 +230,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
 
         containerjTabbedPane.addTab("JSON Viewer", jScrollPane1);
 
-        rSyntaxTextArea1.setColumns(20);
-        rSyntaxTextArea1.setRows(5);
-        rSyntaxTextArea1.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
-        jScrollPane2.setViewportView(rSyntaxTextArea1);
-
-        containerjTabbedPane.addTab("JSON source", jScrollPane2);
-
         jSplitPane1.setLeftComponent(containerjTabbedPane);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
@@ -326,7 +317,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         rTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
         javax.swing.JScrollPane jScrollPanex = new javax.swing.JScrollPane();
         jScrollPanex.setViewportView(rTextArea);
-        containerjTabbedPane.addTab("JSON source", jScrollPanex);
+        int i = containerjTabbedPane.getTabCount() - 1;
+        containerjTabbedPane.addTab("JSON source #" + i, jScrollPanex);
     }
 
     private int getPreferredWidthForColumn(JTable table, TableColumn col) {
@@ -356,7 +348,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         }
         return maxw + 10;
     }
-    
+
     private void treeSelection(JTree tree, JTable table) {
         DefaultMutableTreeNode selNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
         if (selNode == null) {
@@ -484,7 +476,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addTabNew();
     }//GEN-LAST:event_jButton2ActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;
     private javax.swing.JMenuItem cleanContent;
@@ -503,7 +495,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTree jsonTree;
@@ -513,7 +504,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JButton parseAndPretty;
     private javax.swing.JButton pasteAndPress;
     private javax.swing.JButton pasteAndPretty;
-    private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea rSyntaxTextArea1;
     private javax.swing.JMenuItem saveFile;
     private javax.swing.JMenu toolMenu;
     private javax.swing.JToolBar topjToolBar;

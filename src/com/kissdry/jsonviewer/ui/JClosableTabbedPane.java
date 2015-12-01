@@ -25,16 +25,26 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
 
     public JClosableTabbedPane() {
         super();
+
         addMouseListener(this);
+    }
+
+    private void initTabComponent(int i) {
+        setTabComponentAt(i,
+                new ButtonTabComponent(this));
+    }
+
+    private void initTabComponent() {
+        int i = getTabCount();
+        i = i - 1;//index 从0 开始
+        System.out.println("initTabComponent i:" + i);
+        initTabComponent(i);
     }
 
     @Override
     public void addTab(String title, Component component) {
-        this.addTab(title, component, null);
-    }
-
-    public void addTab(String title, Component component, Icon extraIcon) {
-        super.addTab(title, new CloseTabIcon(extraIcon), component);
+        super.addTab(title, component);
+        initTabComponent();
     }
 
     @Override
@@ -56,6 +66,11 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
         ImageToolTip tooltip = new ImageToolTip();
         tooltip.setComponent(this);
         return tooltip;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        
     }
 
     class ImageToolTip extends JToolTip {
@@ -117,19 +132,6 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        int tabNumber = getUI().tabForCoordinate(this, e.getX(), e.getY());
-        if (tabNumber < 0) {
-            return;
-        }
-        Rectangle rect = ((CloseTabIcon) getIconAt(tabNumber)).getBounds();
-        if (rect.contains(e.getX(), e.getY())) {
-            //the tab is being closed  
-            this.removeTabAt(tabNumber);
-        }
-    }
-
-    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
@@ -146,11 +148,6 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
     }
 }
 
-/**
- * The class which generates the 'X' icon for the tabs. The constructor accepts
- * an icon which is extra to the 'X' icon, so you can have tabs like in
- * JBuilder. This value is null if no extra icon is required.
- */
 class CloseTabIcon implements Icon {
 
     private int x_pos;
@@ -167,24 +164,27 @@ class CloseTabIcon implements Icon {
 
     @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
-        this.x_pos = x;
-        this.y_pos = y;
-        Color col = g.getColor();
-        g.setColor(Color.black);
-        int y_p = y + 2;
-        g.drawLine(x + 1, y_p, x + 12, y_p);
-        g.drawLine(x + 1, y_p + 13, x + 12, y_p + 13);
-        g.drawLine(x, y_p + 1, x, y_p + 12);
-        g.drawLine(x + 13, y_p + 1, x + 13, y_p + 12);
-        g.drawLine(x + 3, y_p + 3, x + 10, y_p + 10);
-        g.drawLine(x + 3, y_p + 4, x + 9, y_p + 10);
-        g.drawLine(x + 4, y_p + 3, x + 10, y_p + 9);
-        g.drawLine(x + 10, y_p + 3, x + 3, y_p + 10);
-        g.drawLine(x + 10, y_p + 4, x + 4, y_p + 10);
-        g.drawLine(x + 9, y_p + 3, x + 3, y_p + 9);
-        g.setColor(col);
-        if (fileIcon != null) {
-            fileIcon.paintIcon(c, g, x + width, y_p);
+        if (fileIcon == null) {
+            this.x_pos = x;
+            this.y_pos = y;
+            Color col = g.getColor();
+            g.setColor(Color.black);
+            int y_p = y + width;
+//            g.drawLine(x + 1, y_p, x + 12, y_p);
+//            g.drawLine(x + 1, y_p + 13, x + 12, y_p + 13);
+//            g.drawLine(x, y_p + 1, x, y_p + 12);
+//            g.drawLine(x + 13, y_p + 1, x + 13, y_p + 12);
+//            g.drawLine(x + 3, y_p + 3, x + 10, y_p + 10);
+//            g.drawLine(x + 3, y_p + 4, x + 9, y_p + 10);
+//            g.drawLine(x + 4, y_p + 3, x + 10, y_p + 9);
+//            g.drawLine(x + 10, y_p + 3, x + 3, y_p + 10);
+//            g.drawLine(x + 10, y_p + 4, x + 4, y_p + 10);
+//            g.drawLine(x + 9, y_p + 3, x + 3, y_p + 9);
+//            g.setColor(col);
+        } else {
+            this.x_pos = x;
+            this.y_pos = y;
+            fileIcon.paintIcon(c, g, x, y);
         }
     }
 
