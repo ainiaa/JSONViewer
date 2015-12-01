@@ -25,7 +25,6 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
 
     public JClosableTabbedPane() {
         super();
-
         addMouseListener(this);
     }
 
@@ -36,6 +35,9 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
 
     private void initTabComponent() {
         int i = getTabCount();
+        if (i > 1) {
+            
+        }
         i = i - 1;//index 从0 开始
         System.out.println("initTabComponent i:" + i);
         initTabComponent(i);

@@ -52,7 +52,9 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         initUI();
         initComponents();
         initTreeAndIcon();
-        jTextPane1.paste();
+
+        addTabNew();
+        getTextArea().paste();
     }
 
     public static void initUI() {
@@ -92,10 +94,9 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         pasteAndPretty = new javax.swing.JButton();
         pasteAndPress = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         containerjTabbedPane = new JClosableTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
         jsonTreejScrollPane = new javax.swing.JScrollPane();
         jsonTree = new javax.swing.JTree();
         jMenuBar = new javax.swing.JMenuBar();
@@ -205,7 +206,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         });
         topjToolBar.add(pasteAndPress);
 
-        jButton2.setText("jButton2");
+        jButton2.setText(JSONViewerUIUtil.getI18nById("addNewTab"));
         jButton2.setFocusable(false);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -216,20 +217,21 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         });
         topjToolBar.add(jButton2);
 
+        jButton1.setText("jButton1");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(jButton1);
+
         jSplitPane1.setDividerLocation(630);
         jSplitPane1.setDividerSize(8);
 
         containerjTabbedPane.setAutoscrolls(true);
-
-        jTextPane1.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextPane1FocusGained(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTextPane1);
-
-        containerjTabbedPane.addTab("JSON Viewer", jScrollPane1);
-
         jSplitPane1.setLeftComponent(containerjTabbedPane);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
@@ -317,7 +319,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         rTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
         javax.swing.JScrollPane jScrollPanex = new javax.swing.JScrollPane();
         jScrollPanex.setViewportView(rTextArea);
-        int i = containerjTabbedPane.getTabCount() - 1;
+        int i = containerjTabbedPane.getTabCount();
         containerjTabbedPane.addTab("JSON source #" + i, jScrollPanex);
     }
 
@@ -400,7 +402,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
      * @param prettyFormat
      */
     private void parseJson(boolean prettyFormat) {
-        String jsonStr = jTextPane1.getText();
+        String jsonStr = getTextArea().getText();
         if (jsonStr.isEmpty()) {
             MessageUtil.showInfoMessageDialog(JSONViewerUIUtil.getI18nById("emptyJSON"));
         } else {
@@ -409,7 +411,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
             try {
 
                 jsonStr = ParseJson.parseJsonStr(jsonStr, prettyFormat);
-                jTextPane1.setText(jsonStr);
+                getTextArea().setText(jsonStr);
 
                 JSONViewerUIUtil.createJsonTree(ParseJson.parseJsonArray(jsonStr), root);
                 model.setRoot(root);
@@ -423,32 +425,38 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
 
     }
 
+    private RSyntaxTextArea getTextArea() {
+        javax.swing.JScrollPane pane = (javax.swing.JScrollPane) containerjTabbedPane.getSelectedComponent();
+        RSyntaxTextArea r = (RSyntaxTextArea) pane.getViewport().getView();
+        return r;
+    }
+
     private void parseAndPressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parseAndPressActionPerformed
         parseJson(false);
     }//GEN-LAST:event_parseAndPressActionPerformed
 
     private void cleanTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanTextActionPerformed
-        jTextPane1.setText("");
+        getTextArea().setText("");
     }//GEN-LAST:event_cleanTextActionPerformed
 
     private void escapeStringActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_escapeStringActionPerformed
-        String jsonStr = jTextPane1.getText();
+        String jsonStr = getTextArea().getText();
         if (!jsonStr.isEmpty()) {
             StringEscapeUtils.escapeJava(jsonStr);
         }
     }//GEN-LAST:event_escapeStringActionPerformed
 
     private void unescapeStringActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unescapeStringActionPerformed
-        String jsonStr = jTextPane1.getText();
+        String jsonStr = getTextArea().getText();
         if (!jsonStr.isEmpty()) {
             StringEscapeUtils.unescapeJava(jsonStr);
         }
     }//GEN-LAST:event_unescapeStringActionPerformed
 
     private void cleanNewLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanNewLineActionPerformed
-        String jsonStr = jTextPane1.getText();
+        String jsonStr = getTextArea().getText();
         if (!jsonStr.isEmpty()) {
-            jTextPane1.setText(jsonStr.replaceAll("\n", ""));
+            getTextArea().setText(jsonStr.replaceAll("\n", ""));
         }
     }//GEN-LAST:event_cleanNewLineActionPerformed
 
@@ -456,26 +464,24 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         ControllerJFrame.showAboutBoxFrame();
     }//GEN-LAST:event_aboutMeActionPerformed
 
-    private void jTextPane1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPane1FocusGained
-        String textContent = jTextPane1.getText();
-        if (textContent.isEmpty() || textContent.trim().isEmpty()) {
-            jTextPane1.paste();
-        }
-    }//GEN-LAST:event_jTextPane1FocusGained
-
     private void pasteAndPrettyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteAndPrettyActionPerformed
-        jTextPane1.paste();
+        getTextArea().paste();
         parseJson(true);
     }//GEN-LAST:event_pasteAndPrettyActionPerformed
 
     private void pasteAndPressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasteAndPressActionPerformed
-        jTextPane1.paste();
+        getTextArea().paste();
         parseJson(false);
     }//GEN-LAST:event_pasteAndPressActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addTabNew();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String text = getTextArea().getText();
+        System.out.println(text);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;
@@ -492,11 +498,10 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formatAndPettry;
     private javax.swing.JMenuItem formatContent;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTree jsonTree;
     private javax.swing.JScrollPane jsonTreejScrollPane;
     private javax.swing.JMenuItem openFile;
