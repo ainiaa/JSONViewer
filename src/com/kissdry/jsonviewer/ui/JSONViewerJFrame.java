@@ -1,43 +1,27 @@
 package com.kissdry.jsonviewer.ui;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.kissdry.jsonviewer.util.PropertiesUtil;
 import com.kissdry.jsonviewer.util.ParseJson;
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
-import javax.swing.JViewport;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
-import org.fife.ui.rsyntaxtextarea.Token;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
 /**
  *
@@ -75,6 +59,43 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
                 getClass().getClassLoader().getResource("resources/images/json3.png")));//这个不能以 '/'开头]
     }
 
+    private void codeChangeAction() {
+        javax.swing.JDialog dlg = new javax.swing.JDialog(this);
+        dlg.setTitle(JSONViewerUIUtil.getI18nById("stringUnescape"));
+        dlg.setSize(500, 350);
+        dlg.setMinimumSize(new Dimension(500, 350));
+        JSplitPane spiltPane2 = new JSplitPane();
+        spiltPane2.setDividerLocation(150);
+        spiltPane2.setOrientation(JSplitPane.VERTICAL_SPLIT);
+
+        final JTextArea textAreaSrc = new JTextArea();
+        final JTextArea textAreaDest = new JTextArea();
+        textAreaSrc.setLineWrap(true);
+        textAreaDest.setLineWrap(true);
+
+        spiltPane2.setTopComponent(new JScrollPane(textAreaSrc));
+        spiltPane2.setBottomComponent(new JScrollPane(textAreaDest));
+
+        JButton btnOK = new JButton("转换");
+        btnOK.setSize(50, 25);
+        java.awt.Container pane = dlg.getContentPane();
+        BorderLayout layout = new BorderLayout();
+        //layout.addLayoutComponent(spiltPane, BorderLayout.CENTER);
+        // layout.addLayoutComponent(btnOK, BorderLayout.SOUTH);
+        pane.setLayout(layout);
+        pane.add(spiltPane2, BorderLayout.CENTER);
+        pane.add(btnOK, BorderLayout.SOUTH);
+
+        btnOK.addActionListener((ActionEvent e) -> {
+            String str = textAreaSrc.getText();
+            str = StringEscapeUtils.unescapeJava(str);
+            textAreaDest.setText(str);
+        });
+        dlg.setVisible(true);
+        //MainApp.getApplication().show(dlg);
+
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -256,12 +277,27 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         editMenu.setText(JSONViewerUIUtil.getI18nById("editMenu"));
 
         cleanContent.setText(JSONViewerUIUtil.getI18nById("cleanContent"));
+        cleanContent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanContentActionPerformed(evt);
+            }
+        });
         editMenu.add(cleanContent);
 
         formatContent.setText(JSONViewerUIUtil.getI18nById("formatContent"));
+        formatContent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formatContentActionPerformed(evt);
+            }
+        });
         editMenu.add(formatContent);
 
         formatAndPettry.setText(JSONViewerUIUtil.getI18nById("formatAndPettry"));
+        formatAndPettry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                formatAndPettryActionPerformed(evt);
+            }
+        });
         editMenu.add(formatAndPettry);
 
         jMenuBar.add(editMenu);
@@ -269,9 +305,19 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         toolMenu.setText(JSONViewerUIUtil.getI18nById("toolMenu"));
 
         createTab.setText(JSONViewerUIUtil.getI18nById("createTab"));
+        createTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createTabActionPerformed(evt);
+            }
+        });
         toolMenu.add(createTab);
 
         convertChinese.setText(JSONViewerUIUtil.getI18nById("convertChinese"));
+        convertChinese.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                convertChineseActionPerformed(evt);
+            }
+        });
         toolMenu.add(convertChinese);
 
         jMenuBar.add(toolMenu);
@@ -482,6 +528,26 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         String text = getTextArea().getText();
         System.out.println(text);
     }//GEN-LAST:event_copyContentActionPerformed
+
+    private void createTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createTabActionPerformed
+        addTabNew();
+    }//GEN-LAST:event_createTabActionPerformed
+
+    private void cleanContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanContentActionPerformed
+        getTextArea().setText("");
+    }//GEN-LAST:event_cleanContentActionPerformed
+
+    private void formatContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatContentActionPerformed
+        parseJson(false);
+    }//GEN-LAST:event_formatContentActionPerformed
+
+    private void formatAndPettryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formatAndPettryActionPerformed
+        parseJson(true);
+    }//GEN-LAST:event_formatAndPettryActionPerformed
+
+    private void convertChineseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_convertChineseActionPerformed
+        codeChangeAction();
+    }//GEN-LAST:event_convertChineseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;

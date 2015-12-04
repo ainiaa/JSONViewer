@@ -47,6 +47,9 @@
                   <Connection code="JSONViewerUIUtil.getI18nById(&quot;cleanContent&quot;)" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cleanContentActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="formatContent">
               <Properties>
@@ -54,6 +57,9 @@
                   <Connection code="JSONViewerUIUtil.getI18nById(&quot;formatContent&quot;)" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formatContentActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="formatAndPettry">
               <Properties>
@@ -61,6 +67,9 @@
                   <Connection code="JSONViewerUIUtil.getI18nById(&quot;formatAndPettry&quot;)" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="formatAndPettryActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -77,6 +86,9 @@
                   <Connection code="JSONViewerUIUtil.getI18nById(&quot;createTab&quot;)" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createTabActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="convertChinese">
               <Properties>
@@ -84,6 +96,9 @@
                   <Connection code="JSONViewerUIUtil.getI18nById(&quot;convertChinese&quot;)" type="code"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="convertChineseActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
