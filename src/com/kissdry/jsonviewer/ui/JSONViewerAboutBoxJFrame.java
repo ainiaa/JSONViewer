@@ -6,6 +6,7 @@
 package com.kissdry.jsonviewer.ui;
 
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 
 /**
  *
@@ -20,6 +21,37 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
         initComponents();
         setIconImage(Toolkit.getDefaultToolkit().getImage(
                 getClass().getClassLoader().getResource("resources/images/json3.png")));//这个不能以 '/'开头]
+        addWindowListener(new java.awt.event.WindowListener(){
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ControllerJFrame.showMainJFrame();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                ControllerJFrame.showMainJFrame();
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+        });
     }
 
     /**
@@ -42,7 +74,7 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
         websiteValue = new javax.swing.JLabel();
         descValue = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
         setResizable(false);
 
         versionLabel.setFont(new java.awt.Font("宋体", 1, 14)); // NOI18N
