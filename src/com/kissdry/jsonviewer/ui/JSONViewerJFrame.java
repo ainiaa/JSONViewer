@@ -56,7 +56,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         model.setRoot(root);
         JSONViewerUIUtil.setNodeIcon(jsonTree);
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                getClass().getClassLoader().getResource("resources/images/json3.png")));//这个不能以 '/'开头]
+                getClass().getClassLoader().getResource("resources/images/json.png")));//这个不能以 '/'开头]
     }
 
     private void codeChangeAction() {

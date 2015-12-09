@@ -20,7 +20,7 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
     public JSONViewerAboutBoxJFrame() {
         initComponents();
         setIconImage(Toolkit.getDefaultToolkit().getImage(
-                getClass().getClassLoader().getResource("resources/images/json3.png")));//这个不能以 '/'开头]
+                getClass().getClassLoader().getResource("resources/images/json.png")));//这个不能以 '/'开头]
         addWindowListener(new java.awt.event.WindowListener(){
             @Override
             public void windowOpened(WindowEvent e) {
