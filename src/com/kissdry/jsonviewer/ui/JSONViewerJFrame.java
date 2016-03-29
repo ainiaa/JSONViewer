@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.io.UnsupportedEncodingException;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -22,6 +23,7 @@ import javax.swing.tree.DefaultTreeModel;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -116,6 +118,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         pasteAndPress = new javax.swing.JButton();
         addNewTab = new javax.swing.JButton();
         copyContent = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         containerjTabbedPane = new com.kissdry.jsonviewer.ui.JClosableTabbedPane();
         jsonTreejScrollPane = new javax.swing.JScrollPane();
@@ -248,6 +251,17 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
             }
         });
         topjToolBar.add(copyContent);
+
+        jButton1.setText("jButton1");
+        jButton1.setFocusable(false);
+        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(jButton1);
 
         jSplitPane1.setDividerLocation(630);
         jSplitPane1.setDividerSize(8);
@@ -549,6 +563,19 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         codeChangeAction();
     }//GEN-LAST:event_convertChineseActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            RSyntaxTextArea textArea = getTextArea();
+            String t = textArea.getText();
+            String  tt = java.net.URLDecoder.decode(t,   "utf-8");
+            textArea.setText(t + "\r\n==============\r\n" + tt);
+        } catch (UnsupportedEncodingException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;
     private javax.swing.JButton addNewTab;
@@ -566,6 +593,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formatAndPettry;
     private javax.swing.JMenuItem formatContent;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTree jsonTree;

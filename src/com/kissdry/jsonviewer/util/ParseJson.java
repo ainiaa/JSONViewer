@@ -19,7 +19,7 @@ public class ParseJson {
      */
     public static String parseJsonStr(String jsonStr, boolean prettyFormat) {
         Object obj = JSON.parseArray(jsonStr);
-        return JSON.toJSONString(obj, true);
+        return JSON.toJSONString(obj, prettyFormat);
     }
 
     /**

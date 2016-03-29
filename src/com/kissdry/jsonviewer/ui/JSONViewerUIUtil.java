@@ -4,6 +4,7 @@ import com.kissdry.jsonviewer.util.PropertiesUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.awt.Component;
+import java.math.BigDecimal;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -47,14 +48,30 @@ public class JSONViewerUIUtil {
         for (Object val : arr) {
             if ("com.alibaba.fastjson.JSONObject".equals(val.getClass().getName())) {
                 DefaultMutableTreeNode node = Kit.objNode(index);
-                createJsonObject((JSONObject) val, node);
-                child.add(node);
+                JSONObject vv = null;
+                try {
+                    vv = (JSONObject) val;
+                    createJsonObject(vv, node);
+                    child.add(node);
+                } catch (Exception e) {
+//                    System.out.println(val.getClass().getName() + "  e:" + e.getMessage() + vv.toJSONString());
+                }
+
             } else if ("com.alibaba.fastjson.JSONArray".equals(val.getClass().getName())) {
-                createJsonArray((JSONArray) val, child, Kit.fkey(index));
+                try {
+                    createJsonArray((JSONArray) val, child, Kit.fkey(index));
+                } catch (Exception e) {
+                    System.out.println(val.getClass().getName() + "  dddd");
+                }
+
             } else if (val == null) {
                 child.add(Kit.nullNode(index));
             } else {
-                formatJsonPrimitive(Kit.fkey(index), val, child);
+                try {
+                    formatJsonPrimitive(Kit.fkey(index), val, child);
+                } catch (Exception e) {
+                    System.out.println(val.getClass().getName() + "  gggg");
+                }
             }
             ++index;
         }
@@ -81,7 +98,12 @@ public class JSONViewerUIUtil {
                 createJsonObject((JSONObject) val, node);
                 pNode.add(node);
             } else {
-                formatJsonPrimitive(key, val, pNode);
+                try {
+                    formatJsonPrimitive(key, val, pNode);
+                } catch (Exception e) {
+                    System.out.println(key + " =>" + val + " e:" + e.getMessage());
+                }
+
             }
         });
 
@@ -96,12 +118,14 @@ public class JSONViewerUIUtil {
     private static void formatJsonPrimitive(String key, Object val, DefaultMutableTreeNode pNode) {
         if (val == null) {
             pNode.add(Kit.nullNode(key));
-        } else if (val instanceof Integer) {
+        } else if (val instanceof Integer || val instanceof Float || val instanceof Double || val instanceof Number) {
             pNode.add(Kit.numNode(key, val.toString()));
-        } else if (val instanceof Boolean) {
+        } else if (val instanceof BigDecimal) {
+            pNode.add(Kit.numNode(key, (BigDecimal)val));
+        }else if (val instanceof Boolean) {
             pNode.add(Kit.boolNode(key, (Boolean) val));
         } else {
-            pNode.add(Kit.strNode(key, (String) val));
+            pNode.add(Kit.strNode(key, val.toString()));
         }
     }
 

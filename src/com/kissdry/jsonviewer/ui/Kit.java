@@ -1,5 +1,6 @@
 package com.kissdry.jsonviewer.ui;
 
+import java.math.BigDecimal;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -38,6 +39,10 @@ public class Kit {
     }
 
     public static DefaultMutableTreeNode numNode(String key, String val) {
+        return treeNode(NUMBER_PREFIX + key + SPLIT + val);
+    }
+    
+    public static DefaultMutableTreeNode numNode(String key, BigDecimal val) {
         return treeNode(NUMBER_PREFIX + key + SPLIT + val);
     }
 
