@@ -97,7 +97,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         //MainApp.getApplication().show(dlg);
 
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -469,11 +469,11 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
             DefaultMutableTreeNode root = Kit.objNode("JSON");
             DefaultTreeModel model = (DefaultTreeModel) jsonTree.getModel();
             try {
-
-                jsonStr = ParseJson.parseJsonStr(jsonStr, prettyFormat);
+                Object jsonObj = ParseJson.parseObject(jsonStr);
+                jsonStr = ParseJson.parseJsonStr(jsonObj, prettyFormat);
                 getTextArea().setText(jsonStr);
 
-                JSONViewerUIUtil.createJsonTree(ParseJson.parseJsonArray(jsonStr), root);
+                JSONViewerUIUtil.createJsonTree(jsonObj, root);
                 model.setRoot(root);
                 JSONViewerUIUtil.setNodeIcon(jsonTree);
             } catch (Exception ex) {
@@ -567,13 +567,13 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         try {
             RSyntaxTextArea textArea = getTextArea();
             String t = textArea.getText();
-            String  tt = java.net.URLDecoder.decode(t,   "utf-8");
+            String tt = java.net.URLDecoder.decode(t, "utf-8");
             textArea.setText(t + "\r\n==============\r\n" + tt);
         } catch (UnsupportedEncodingException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
-        
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

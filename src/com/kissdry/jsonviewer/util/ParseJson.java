@@ -18,9 +18,46 @@ public class ParseJson {
      * @return
      */
     public static String parseJsonStr(String jsonStr, boolean prettyFormat) {
-        Object obj = JSON.parseArray(jsonStr);
+        Object obj = null;
+        try {
+             obj = JSON.parse(jsonStr);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         return JSON.toJSONString(obj, prettyFormat);
     }
+    
+    /**
+     * 将字符串转化为标准的json字符串
+     *
+     * @author Jeff Liu<jeff.liu.guo@gmail.com>
+     * @param obj
+     * @param prettyFormat
+     * @return
+     */
+    public static String parseJsonStr(Object obj, boolean prettyFormat) {
+        return JSON.toJSONString(obj, prettyFormat);
+    }
+    
+    /**
+     * 将字符串转化为标准的json字符串
+     *
+     * @author Jeff Liu<jeff.liu.guo@gmail.com>
+     * @param jsonStr
+     * @return
+     */
+    public static Object parseObject(String jsonStr) {
+        Object obj = null;
+        try {
+             obj = JSON.parse(jsonStr);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return obj;
+    }
+    
 
     /**
      * 将字符串转化为JSONArray
@@ -34,9 +71,10 @@ public class ParseJson {
     }
 
     /**
-     * 测试用的 
+     * 测试用的
+     *
      * @author Jeff Liu<jeff.liu.guo@gmail.com>
-     * @param jsonObj 
+     * @param jsonObj
      */
     private void getTypes(Object jsonObj) {
         int size = 0;
