@@ -121,7 +121,7 @@ public class JSONViewerUIUtil {
         } else if (val instanceof Integer || val instanceof Float || val instanceof Double || val instanceof Number) {
             pNode.add(Kit.numNode(key, val.toString()));
         } else if (val instanceof BigDecimal) {
-            pNode.add(Kit.numNode(key, (BigDecimal)val));
+            pNode.add(Kit.bigDecimalNode(key, (BigDecimal)val));
         }else if (val instanceof Boolean) {
             pNode.add(Kit.boolNode(key, (Boolean) val));
         } else {
@@ -150,25 +150,25 @@ public class JSONViewerUIUtil {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                 String tmp = node.toString();
                 if (tmp.startsWith(Kit.ARRAY_PREFIX)) {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/a.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/array.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.STRING_PREFIX)) {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/v.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/string.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.OBJECT_PREFIX)) {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/o.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/object.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.NUMBER_PREFIX)) {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/n.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/number.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.NULL_PREFIX)) {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/k.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/nil.gif")));
                     this.setText(tmp.substring(2));
                 } else if (tmp.startsWith(Kit.BOOL_PREFIX)) {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/v.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/boolean.png")));
                     this.setText(tmp.substring(2));
                 } else {
-                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/v.gif")));
+                    this.setIcon(new ImageIcon(getResourceByPath("resources/images/string.gif")));
                     this.setText(tmp.substring(2));
                 }
                 return this;

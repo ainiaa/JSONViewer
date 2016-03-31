@@ -19,6 +19,7 @@ public class Kit {
     public final static String ARRAY_SIGN = "a";
     public final static String STRING_SIGN = "v";
     public final static String BOOL_SIGN = "b";
+    public final static String DECIMAL_SIGN = "c";
 
     public final static String NULL_PREFIX = NULL_SIGN + SIGN;
     public final static String NUMBER_PREFIX = NUMBER_SIGN + SIGN;
@@ -26,6 +27,7 @@ public class Kit {
     public final static String ARRAY_PREFIX = ARRAY_SIGN + SIGN;
     public final static String STRING_PREFIX = STRING_SIGN + SIGN;
     public final static String BOOL_PREFIX = BOOL_SIGN + SIGN;
+    public final static String BIG_DECIMAL_PREFIX = DECIMAL_SIGN + SIGN;
 
     public final static String ARRAY = "Array";
     public final static String OBJECT = "Object";
@@ -41,9 +43,13 @@ public class Kit {
     public static DefaultMutableTreeNode numNode(String key, String val) {
         return treeNode(NUMBER_PREFIX + key + SPLIT + val);
     }
-    
+
     public static DefaultMutableTreeNode numNode(String key, BigDecimal val) {
         return treeNode(NUMBER_PREFIX + key + SPLIT + val);
+    }
+
+    public static DefaultMutableTreeNode bigDecimalNode(String key, BigDecimal val) {
+        return treeNode(BIG_DECIMAL_PREFIX + key + SPLIT + val);
     }
 
     public static DefaultMutableTreeNode numNode(int index, String val) {
@@ -151,6 +157,10 @@ public class Kit {
                     arr[1] = str.substring(2, i);
                     arr[2] = str.substring(i + 4, str.length() - 1);
                     break;
+                case Kit.DECIMAL_SIGN:
+                    arr[1] = str.substring(2, i);
+                    arr[2] = str.substring(i + 4, str.length() - 1);
+                    break;
                 default:
                     arr[1] = str.substring(2, i);
                     arr[2] = str.substring(i + 3, str.length());
@@ -163,5 +173,4 @@ public class Kit {
 //    public static void main(String[] args) {
 //        System.out.println(getIndex("[5]"));
 //    }
-
 }
