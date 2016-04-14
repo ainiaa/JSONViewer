@@ -21,6 +21,7 @@ public class JSONViewerAboutBoxJFrame extends javax.swing.JFrame {
         initComponents();
         setIconImage(Toolkit.getDefaultToolkit().getImage(
                 getClass().getClassLoader().getResource("resources/images/json.png")));//这个不能以 '/'开头]
+        setTitle(JSONViewerUIUtil.getI18nById("title"));
         addWindowListener(new java.awt.event.WindowListener(){
             @Override
             public void windowOpened(WindowEvent e) {

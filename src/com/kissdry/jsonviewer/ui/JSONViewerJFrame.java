@@ -59,6 +59,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         JSONViewerUIUtil.setNodeIcon(jsonTree);
         setIconImage(Toolkit.getDefaultToolkit().getImage(
                 getClass().getClassLoader().getResource("resources/images/json.png")));//这个不能以 '/'开头]
+        setTitle(JSONViewerUIUtil.getI18nById("title"));
     }
 
     private void codeChangeAction() {
@@ -94,8 +95,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
             textAreaDest.setText(str);
         });
         dlg.setVisible(true);
-        //MainApp.getApplication().show(dlg);
-
     }
 
     /**
