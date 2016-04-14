@@ -118,7 +118,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         pasteAndPress = new javax.swing.JButton();
         addNewTab = new javax.swing.JButton();
         copyContent = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         containerjTabbedPane = new com.kissdry.jsonviewer.ui.JClosableTabbedPane();
         jsonTreejScrollPane = new javax.swing.JScrollPane();
@@ -142,6 +141,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
 
         topjToolBar.setRollover(true);
 
+        parseAndPretty.setBackground(new java.awt.Color(51, 51, 255));
+        parseAndPretty.setForeground(new java.awt.Color(240, 240, 240));
         parseAndPretty.setText(JSONViewerUIUtil.getI18nById("parseAndPretty"));
         parseAndPretty.setFocusable(false);
         parseAndPretty.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -153,6 +154,8 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         });
         topjToolBar.add(parseAndPretty);
 
+        parseAndPress.setBackground(new java.awt.Color(0, 204, 204));
+        parseAndPress.setForeground(new java.awt.Color(255, 51, 255));
         parseAndPress.setText(JSONViewerUIUtil.getI18nById("parseAndPress"));
         parseAndPress.setFocusable(false);
         parseAndPress.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -251,17 +254,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
             }
         });
         topjToolBar.add(copyContent);
-
-        jButton1.setText("jButton1");
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        topjToolBar.add(jButton1);
 
         jSplitPane1.setDividerLocation(630);
         jSplitPane1.setDividerSize(8);
@@ -539,8 +531,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addNewTabActionPerformed
 
     private void copyContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyContentActionPerformed
-        String text = getTextArea().getText();
-        System.out.println(text);
+        getTextArea().copy();
     }//GEN-LAST:event_copyContentActionPerformed
 
     private void createTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createTabActionPerformed
@@ -563,19 +554,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         codeChangeAction();
     }//GEN-LAST:event_convertChineseActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            RSyntaxTextArea textArea = getTextArea();
-            String t = textArea.getText();
-            String tt = java.net.URLDecoder.decode(t, "utf-8");
-            textArea.setText(t + "\r\n==============\r\n" + tt);
-        } catch (UnsupportedEncodingException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;
     private javax.swing.JButton addNewTab;
@@ -593,7 +571,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem formatAndPettry;
     private javax.swing.JMenuItem formatContent;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTree jsonTree;

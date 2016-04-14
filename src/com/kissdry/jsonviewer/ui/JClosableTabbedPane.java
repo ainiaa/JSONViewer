@@ -39,7 +39,6 @@ public class JClosableTabbedPane extends JTabbedPane implements MouseListener {
             
         }
         i = i - 1;//index 从0 开始
-        System.out.println("initTabComponent i:" + i);
         initTabComponent(i);
     }
 
@@ -169,20 +168,7 @@ class CloseTabIcon implements Icon {
         if (fileIcon == null) {
             this.x_pos = x;
             this.y_pos = y;
-            Color col = g.getColor();
             g.setColor(Color.black);
-            int y_p = y + width;
-//            g.drawLine(x + 1, y_p, x + 12, y_p);
-//            g.drawLine(x + 1, y_p + 13, x + 12, y_p + 13);
-//            g.drawLine(x, y_p + 1, x, y_p + 12);
-//            g.drawLine(x + 13, y_p + 1, x + 13, y_p + 12);
-//            g.drawLine(x + 3, y_p + 3, x + 10, y_p + 10);
-//            g.drawLine(x + 3, y_p + 4, x + 9, y_p + 10);
-//            g.drawLine(x + 4, y_p + 3, x + 10, y_p + 9);
-//            g.drawLine(x + 10, y_p + 3, x + 3, y_p + 10);
-//            g.drawLine(x + 10, y_p + 4, x + 4, y_p + 10);
-//            g.drawLine(x + 9, y_p + 3, x + 3, y_p + 9);
-//            g.setColor(col);
         } else {
             this.x_pos = x;
             this.y_pos = y;
@@ -203,24 +189,4 @@ class CloseTabIcon implements Icon {
     public Rectangle getBounds() {
         return new Rectangle(x_pos, y_pos, width, height);
     }
-    /*public static void main(String args[]) { 
-    try { 
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-    } 
-    catch (Exception e) { 
-    e.printStackTrace(); 
-    } 
-    JClosableTabbedPane pane = new JClosableTabbedPane(); 
-    ImageIcon icon = new ImageIcon("images/middle.jpg"); 
-    pane.addTab("tab1",new JButton("first Button"),icon); 
-    pane.addTab("tab2",new JButton("sec Button"),icon); 
-    pane.addTab("tab3",new JButton("third Button"),icon); 
-    pane.addTab("tab4",new JButton("fourth Button"),icon); 
-    JFrame frame = new JFrame("Demo"); 
-    frame.getContentPane().add(pane,BorderLayout.CENTER); 
-    frame.setSize(500,300); 
-    frame.setLocation(300,200); 
-    frame.show(); 
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-    }*/
 }
