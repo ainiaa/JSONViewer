@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -117,6 +118,7 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         pasteAndPress = new javax.swing.JButton();
         addNewTab = new javax.swing.JButton();
         copyContent = new javax.swing.JButton();
+        urlDecode = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         containerjTabbedPane = new com.kissdry.jsonviewer.ui.JClosableTabbedPane();
         jsonTreejScrollPane = new javax.swing.JScrollPane();
@@ -253,6 +255,17 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
             }
         });
         topjToolBar.add(copyContent);
+
+        urlDecode.setText(JSONViewerUIUtil.getI18nById("urlDecode"));
+        urlDecode.setFocusable(false);
+        urlDecode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        urlDecode.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        urlDecode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                urlDecodeActionPerformed(evt);
+            }
+        });
+        topjToolBar.add(urlDecode);
 
         jSplitPane1.setDividerLocation(630);
         jSplitPane1.setDividerSize(8);
@@ -553,6 +566,16 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
         codeChangeAction();
     }//GEN-LAST:event_convertChineseActionPerformed
 
+    private void urlDecodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlDecodeActionPerformed
+        String origin = getTextArea().getText();
+        try {
+            origin = URLDecoder.decode(origin, "UTF-8");
+            getTextArea().setText(origin);
+        } catch (UnsupportedEncodingException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_urlDecodeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMe;
     private javax.swing.JButton addNewTab;
@@ -583,5 +606,6 @@ public class JSONViewerJFrame extends javax.swing.JFrame {
     private javax.swing.JMenu toolMenu;
     private javax.swing.JToolBar topjToolBar;
     private javax.swing.JButton unescapeString;
+    private javax.swing.JButton urlDecode;
     // End of variables declaration//GEN-END:variables
 }
